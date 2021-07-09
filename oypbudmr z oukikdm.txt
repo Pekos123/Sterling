@@ -1,0 +1,3 @@
+001 zmienna ma wartość null
+002 zmienna bool what nie posiada wartości ani 'true' ani 'false'
+003 nie mozna odczytać wartości, ani int ani string
