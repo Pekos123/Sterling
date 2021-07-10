@@ -9,14 +9,19 @@ using System.IO;
 // Przestrzeń nazw
 namespace NumberGuesser 
 {
+
     // Klasa główna
     class Program
     {
+
         // Metoda główna, czyli punkt wejścia programu 
         static void Main(string[] args)
         {
+
             // Wyświetl informacje o aplikacji
             GetAppInfo();
+
+            StreamWriter sw = new StreamWriter("olnitr.txt", false);
 
             // Zapytaj o imię i zainicjalizuj zmienną typu tesktowego
             string userName = GetUserName();
@@ -28,10 +33,8 @@ namespace NumberGuesser
             Random random = new Random();
             // Zainicjalizuj zmienną typu całkowtego
 
-            //rekord
             int numbersCountRekord = 0;
 
-            //file("olnitr.txt", userName, numbersCount, true);
             //zeby ciagle pytano cie o liczby
             while (true){
             // Wyświetl komunikat
@@ -94,24 +97,41 @@ namespace NumberGuesser
                     correctAnswer = true;
 					// Wyświetl komunikat
                     PrintColorMessage(ConsoleColor.Green, "Brawo! Prawidłowa odpowiedź!");
-                    numbersCount += 1;
-                    
-                    //czy rekord jest aktualny
-                    if(numbersCount < numbersCountRekord || numbersCountRekord == 0){
-                      numbersCountRekord = numbersCount;
+                    numbersCount += 1;                
 
-                      //fileWrite("olnitr.txt", numbersCountRekord);
+                    //czy rekord jest aktualny 
+                    StreamReader sr = new StreamReader("olnitr.txt");
+                    string line = sr.ReadLine();
+                    int intLine; 
+                    Int32.TryParse(line, out intLine);
+
+                    if(intLine == null){
+                      numbersCountRekord = 0;
+                      continue;
+                    }
+
+                    if(numbersCountRekord == 0 || intLine == 0){
+                      numbersCountRekord = numbersCount;
+                      sw.Write(numbersCountRekord);
+                    }
+
+                    // robi rekor
+
+                    if(numbersCount < intLine){
+                      numbersCountRekord = numbersCount;
+                      sw.Write(numbersCountRekord);
                     }
 
                     //pokazuje liczbe prob
                     PrintColorMessage(ConsoleColor.Magenta, $"Liczba prób: {numbersCount}");
 
-                    //fileOpen("olnitr.txt");
-
                     //pokazuje twój rekord
                     PrintColorMessage(ConsoleColor.Magenta, $"Rekord: {numbersCountRekord}");
+                  
+                    sw.Flush();
+                    sr.Close();
                 }
-            }
+              }
             }
 
         }
@@ -173,43 +193,7 @@ namespace NumberGuesser
             // Zresetuj kolor tekstu konsoli
             Console.ResetColor();
         }
+
+        
     }
-
-    /*class files 
-    {
-      bool isntFile = false;
-
-        public void fileWrite(string path, float nc){
-
-          StreamWriter sw;
-          if(!File.Exists(path)){
-            sw = File.CreateText(path);
-          }
-          else{
-            sw = new StreamWriter(path, true);
-          }
-          
-          if(nc != null){
-            sw.WriteLine(nc);
-          }
-          else if(nc != null && isntFile == true){
-            isntFile = false;
-          }
-          else{
-            PrintColorMessage(ConsoleColor.Red, "Bląd nr. 001");
-            sw.Close();
-          }
-
-        }
-        public int points = 0;
-        public void fileOpen(string path){
-          StreamReader sr = File.OpenText(path);
-          if(!File.Exists(path)){
-            fileWrite("olnitr.txt", null);
-            isntFile = true;
-          }
-          string line = sr.ReadLine();
-          int points = Int16.Parse(line);        
-        }
-    }*/
 }
