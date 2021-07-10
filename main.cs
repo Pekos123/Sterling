@@ -21,8 +21,6 @@ namespace NumberGuesser
             // Wyświetl informacje o aplikacji
             GetAppInfo();
 
-            StreamWriter sw = new StreamWriter("olnitr.txt", false);
-
             // Zapytaj o imię i zainicjalizuj zmienną typu tesktowego
             string userName = GetUserName();
 
@@ -100,11 +98,11 @@ namespace NumberGuesser
                     numbersCount += 1;                
 
                     //czy rekord jest aktualny 
-                    StreamReader sr = new StreamReader("olnitr.txt");
-                    string line = sr.ReadLine();
                     int intLine; 
-                    Int32.TryParse(line, out intLine);
-
+                    using(System.IO.StreamReader sr = new System.IO.StreamReader("olnitr.txt")){
+                      string line = sr.ReadLine();
+                      Int32.TryParse(line, out intLine);
+                    }
                     if(intLine == null){
                       numbersCountRekord = 0;
                       continue;
@@ -112,14 +110,18 @@ namespace NumberGuesser
 
                     if(numbersCountRekord == 0 || intLine == 0){
                       numbersCountRekord = numbersCount;
-                      sw.Write(numbersCountRekord);
+                      using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", false)){
+                        sw.Write(numbersCountRekord);
+                      }
                     }
 
                     // robi rekor
 
                     if(numbersCount < intLine){
                       numbersCountRekord = numbersCount;
-                      sw.Write(numbersCountRekord);
+                      using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", false)){                      
+                        sw.Write(numbersCountRekord);
+                      }
                     }
 
                     //pokazuje liczbe prob
@@ -128,8 +130,9 @@ namespace NumberGuesser
                     //pokazuje twój rekord
                     PrintColorMessage(ConsoleColor.Magenta, $"Rekord: {numbersCountRekord}");
                   
-                    sw.Flush();
-                    sr.Close();
+                    using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", false)){sw.Flush();}
+
+                    using(System.IO.StreamReader sr = new System.IO.StreamReader("olnitr.txt")){sr.Close();}
                 }
               }
             }
