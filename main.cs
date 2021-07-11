@@ -110,16 +110,30 @@ namespace NumberGuesser
 
                     if(numbersCountRekord == 0 || intLine == 0){
                       numbersCountRekord = numbersCount;
-                      using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", false)){
+					  using(FileStream fs = File.Open("olnitr.txt",FileMode.OpenOrCreate, FileAccess.ReadWrite))
+						{
+     						lock(fs)
+     						{
+          						fs.SetLength(0);
+     						}
+						}
+                      using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", true)){
                         sw.Write(numbersCountRekord);
                       }
                     }
 
                     // robi rekor
 
-                    if(numbersCount < intLine){
-                      numbersCountRekord = numbersCount;
-                      using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", false)){                      
+                    else if(numbersCount < intLine){
+                    	numbersCountRekord = numbersCount;
+						using(FileStream fs = File.Open("olnitr.txt",FileMode.OpenOrCreate, FileAccess.ReadWrite))
+						{
+     						lock(fs)
+     						{
+          						fs.SetLength(0);
+     						}
+						}
+                      using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", true)){                      
                         sw.Write(numbersCountRekord);
                       }
                     }
@@ -130,7 +144,7 @@ namespace NumberGuesser
                     //pokazuje twój rekord
                     PrintColorMessage(ConsoleColor.Magenta, $"Rekord: {numbersCountRekord}");
                   
-                    using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", false)){sw.Flush();}
+                    using(System.IO.StreamWriter sw = new System.IO.StreamWriter("olnitr.txt", true)){sw.Flush();}
 
                     using(System.IO.StreamReader sr = new System.IO.StreamReader("olnitr.txt")){sr.Close();}
                 }
