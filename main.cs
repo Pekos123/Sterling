@@ -98,11 +98,12 @@ namespace NumberGuesser
                     numbersCount += 1;                
 
                     //czy rekord jest aktualny 
-                    int intLine; 
+                    int intLine;
+					string line = ""; 
                     using(System.IO.StreamReader sr = new System.IO.StreamReader("olnitr.txt")){
-                      string line = sr.ReadLine();
-                      Int32.TryParse(line, out intLine);
+                      line = sr.ReadLine();
                     }
+					Int32.TryParse(line, out intLine);
                     if(intLine == null){
                       numbersCountRekord = 0;
                       continue;
